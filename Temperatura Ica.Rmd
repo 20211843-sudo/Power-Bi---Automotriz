@@ -63,7 +63,7 @@ mapa1<-rast(mapa1)
 pol = st_sfc(st_polygon(list(cbind(puntos[,1],puntos[,2]))))
 h<-st_sf(r=10,pol)
 ica1 <- mask(mapa1,h)
-#....................
+#.....................
 PlotOnStaticMap(MyMap)
 plot(ica1,add=TRUE)
 contour(ica1,add=TRUE, labcex=1,nlevels=20)
