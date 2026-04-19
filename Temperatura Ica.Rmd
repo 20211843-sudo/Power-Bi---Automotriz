@@ -1,0 +1,80 @@
+---
+title: "Analisis de la temperatura en la Región Ica en GOOGLE"
+author: "Estadistica"
+date: "2024-05-21"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RgoogleMaps)
+library(terra)
+library(sf)
+library(sp)
+library(spdep)
+library(gstat)
+
+```
+
+### Region ICA
+
+```{r,comment=NA}
+setwd("~/Documentos/Estadistica espacial/Mapas departamentos/Ica")
+region<- read.table("Region Ica.txt",header=T)
+AMT<-read.table("temperatura ICA.txt",header=T)
+peru <- st_read("DEPARTAMENTOS.shp")[0]
+ica<-peru[11,1]
+# Extraer las coordenadas del borde de Ica
+xy<- ica$geometry
+s <- xy[[1]][[1]][[1]]
+coords <- s[,c(2,1)]
+center <- c(mean(coords[,1]), mean(coords[,2]))
+zoom <-8
+MyMap <- GetMap(center=center, zoom=zoom, maptype = "roadmap")
+LatLon<-LatLon2XY.centered(MyMap, coords[,1],coords[,2],zoom=zoom)
+puntos<-cbind(LatLon[[1]],LatLon[[2]])
+PlotOnStaticMap(MyMap)
+polygon(puntos,border="orange",lwd=3)
+e<-c(range(puntos[,2]),range(puntos[,1]))
+#plot(grd,add=TRUE)
+xy <- LatLon2XY.centered(MyMap, region[,3],region[,4],zoom=zoom)
+mes<-AMT[AMT$mes==11,]
+tmedia<-apply(mes[,3:4],1,mean)
+Tmes <- data.frame(region,temp=tmedia)
+Tmes$latitud <- xy$newX
+Tmes$longitud<- xy$newY
+polygon(puntos,border="orange",lwd=3)
+# AREA para interpolar
+#e<-ext(ica)
+grd<-expand.grid(y=seq(from=e[1],to=e[2],by=1), x=seq(from=e[3],to=e[4],by=1)) # by es la distancia
+coordinates(grd)<- ~x + y
+gridded(grd)<- TRUE
+```
+
+### Region Ica y mapa de temperatura media para un mes
+
+```{r,comment=NA,fig.align='center',fig.width=7,fig.height=5}
+op<-par(mar=c(3,3,3,0),cex=0.8)
+coordinates(Tmes)<- ~longitud + latitud 
+mapa1<-idw(temp ~ 1, Tmes,grd)
+mapa1<-mapa1[,-2]
+mapa1<-rast(mapa1)
+#..............
+pol = st_sfc(st_polygon(list(cbind(puntos[,1],puntos[,2]))))
+h<-st_sf(r=10,pol)
+ica1 <- mask(mapa1,h)
+#....................
+PlotOnStaticMap(MyMap)
+plot(ica1,add=TRUE)
+contour(ica1,add=TRUE, labcex=1,nlevels=20)
+par(op)
+```
+
+```{r,comment=NA,fig.align='center',fig.width=7,fig.height=5}
+op<-par(mar=c(3,3,3,0),cex=0.8)
+#....................
+PlotOnStaticMap(MyMap)
+image(ica1,add=TRUE)
+contour(ica1,add=TRUE, labcex=1,nlevels=20)
+par(op)
+```
