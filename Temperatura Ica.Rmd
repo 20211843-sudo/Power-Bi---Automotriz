@@ -76,4 +76,4 @@ PlotOnStaticMap(MyMap)
 image(ica1,add=TRUE)
 contour(ica1,add=TRUE, labcex=1,nlevels=20)
 par(op)
-```
+########################
