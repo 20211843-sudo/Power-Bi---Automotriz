@@ -1,0 +1,43 @@
+REPORTE DE SIMULACIÓN DE CONGESTIÓN EN EL COMEDOR UNIVERSITARIO
+==============================================================
+
+Fecha de generación: 20429 
+Número de observaciones: 55 
+
+1. PARÁMETROS DE SIMULACIÓN:
+   Capacidad total: 40 estudiantes/minuto
+   Alpha (tiempo base): 2.5 
+   Beta1 (efecto demanda): 0.15 
+   Beta2 (efecto becados): 8 
+
+2. RESULTADOS DEL MODELO:
+
+Call:
+lm(formula = Tiempo_Espera ~ Demanda + Porcentaje_Becados, data = resultados)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.6601 -1.2302  0.1002  1.0600  3.6645 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(>|t|)    
+(Intercept)         3.96229    1.05461   3.757 0.000436 ***
+Demanda             0.15167    0.01836   8.261 4.94e-11 ***
+Porcentaje_Becados  0.01604    0.03060   0.524 0.602305    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.691 on 52 degrees of freedom
+Multiple R-squared:  0.6502,	Adjusted R-squared:  0.6368 
+F-statistic: 48.34 on 2 and 52 DF,  p-value: 1.374e-12
+
+
+3. ESTADÍSTICAS DE CONGESTIÓN:
+   Observaciones con alta congestión: 0 
+   Observaciones con congestión moderada: 0 
+   Observaciones sin congestión: 55 
+
+4. RECOMENDACIONES:
+   ✓ El efecto de la demanda es significativo. Recomendamos:
+     - Distribuir el flujo según horarios
+     - Incentivar uso en horas no pico
