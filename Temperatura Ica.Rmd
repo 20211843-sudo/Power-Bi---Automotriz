@@ -69,7 +69,6 @@ plot(ica1,add=TRUE)
 contour(ica1,add=TRUE, labcex=1,nlevels=20)
 par(op)
 ```
-
 ```{r,comment=NA,fig.align='center',fig.width=7,fig.height=5}
 op<-par(mar=c(3,3,3,0),cex=0.8)
 #....................
